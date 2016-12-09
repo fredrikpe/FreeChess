@@ -1,6 +1,8 @@
 package fred.freechess;
 
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,31 +16,35 @@ import static fred.freechess.PieceType.B;
 
 class ChessBoard {
 
+    private ChessSurface parent;
+
     Vector<Piece> pieces;
     Piece selectedPiece;
+    Piece promotionPawn;
+    Piece enPassant;
 
-    ChessBoard() {
+    ChessBoard(ChessSurface parent) {
+        this.parent = parent;
         pieces = new Vector<>();
-        List<String> files = new ArrayList<>(Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h"));
         for (int i=0; i<8; i++) {
             pieces.add(new Piece(PieceColor.WHITE, new Square(i, 6), PieceType.P));
             pieces.add(new Piece(PieceColor.BLACK, new Square(i, 1), PieceType.P));
         }
         pieces.add(new Piece(PieceColor.WHITE, new Square(0, 7), PieceType.T));
         pieces.add(new Piece(PieceColor.WHITE, new Square(1, 7), PieceType.N));
-        pieces.add(new Piece(PieceColor.WHITE, new Square(2, 7), B));
-        pieces.add(new Piece(PieceColor.WHITE, new Square(3, 4), PieceType.Q));
+        pieces.add(new Piece(PieceColor.WHITE, new Square(2, 7), PieceType.B));
+        pieces.add(new Piece(PieceColor.WHITE, new Square(3, 7), PieceType.Q));
         pieces.add(new Piece(PieceColor.WHITE, new Square(4, 7), PieceType.K));
-        pieces.add(new Piece(PieceColor.WHITE, new Square(5, 7), B));
+        pieces.add(new Piece(PieceColor.WHITE, new Square(5, 7), PieceType.B));
         pieces.add(new Piece(PieceColor.WHITE, new Square(6, 7), PieceType.N));
         pieces.add(new Piece(PieceColor.WHITE, new Square(7, 7), PieceType.T));
 
         pieces.add(new Piece(PieceColor.BLACK, new Square(0, 0), PieceType.T));
         pieces.add(new Piece(PieceColor.BLACK, new Square(1, 0), PieceType.N));
-        pieces.add(new Piece(PieceColor.BLACK, new Square(2, 0), B));
+        pieces.add(new Piece(PieceColor.BLACK, new Square(2, 0), PieceType.B));
         pieces.add(new Piece(PieceColor.BLACK, new Square(3, 0), PieceType.Q));
         pieces.add(new Piece(PieceColor.BLACK, new Square(4, 0), PieceType.K));
-        pieces.add(new Piece(PieceColor.BLACK, new Square(5, 0), B));
+        pieces.add(new Piece(PieceColor.BLACK, new Square(5, 0), PieceType.B));
         pieces.add(new Piece(PieceColor.BLACK, new Square(6, 0), PieceType.N));
         pieces.add(new Piece(PieceColor.BLACK, new Square(7, 0), PieceType.T));
 
@@ -51,8 +57,23 @@ class ChessBoard {
                 break;
             }
         }
+        if (enPassant != null && file == enPassant.square.file
+            && selectedPiece.type == PieceType.P && selectedPiece != enPassant) {
+            pieces.remove(enPassant);
+        }
+        int oldRank = selectedPiece.square.rank;
+
         selectedPiece.square.file = file;
         selectedPiece.square.rank = rank;
+        if (selectedPiece.type == PieceType.P && (rank == 0 || rank == 7)) {
+            // Pawn promotion
+            promotionPawn = selectedPiece;
+            ((Play) parent.getContext()).promotionChooser();
+        }
+        if (selectedPiece.type == PieceType.P && Math.abs(oldRank - rank) == 2)
+            enPassant = selectedPiece;
+        else
+            enPassant = null;
     }
 
     ArrayList<Square> possibleMoves(Piece piece) {
@@ -125,6 +146,10 @@ class ChessBoard {
                             moves.add(new Square(file, rank + 2*rankDirection));
                         }
                     }
+                }
+                if (enPassant != null) {
+                    if (enPassant.square.rank == rank && Math.abs(enPassant.square.file - file) == 1)
+                        moves.add(new Square(enPassant.square.file, rank + rankDirection));
                 }
                 break;
             default:

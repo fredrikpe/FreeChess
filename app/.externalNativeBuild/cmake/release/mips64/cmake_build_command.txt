@@ -1,14 +1,14 @@
-Executable : /home/fred/Android/Sdk/cmake/3.6.3155560/bin/cmake
+Executable : /home/fredrik/Android/Sdk/cmake/3.6.3155560/bin/cmake
 arguments : 
--H/home/fred/dev/FreeChess/app
--B/home/fred/dev/FreeChess/app/.externalNativeBuild/cmake/release/mips64
+-H/home/fredrik/dev/FreeChess/app
+-B/home/fredrik/dev/FreeChess/app/.externalNativeBuild/cmake/release/mips64
 -GAndroid Gradle - Ninja
 -DANDROID_ABI=mips64
--DANDROID_NDK=/home/fred/Android/Sdk/ndk-bundle
--DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/fred/dev/FreeChess/app/build/intermediates/cmake/release/obj/mips64
+-DANDROID_NDK=/home/fredrik/Android/Sdk/ndk-bundle
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/fredrik/dev/FreeChess/app/build/intermediates/cmake/release/obj/mips64
 -DCMAKE_BUILD_TYPE=Release
--DCMAKE_MAKE_PROGRAM=/home/fred/Android/Sdk/cmake/3.6.3155560/bin/ninja
--DCMAKE_TOOLCHAIN_FILE=/home/fred/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/home/fredrik/Android/Sdk/cmake/3.6.3155560/bin/ninja
+-DCMAKE_TOOLCHAIN_FILE=/home/fredrik/Android/Sdk/ndk-bundle/build/cmake/android.toolchain.cmake
 -DANDROID_NATIVE_API_LEVEL=21
 -DCMAKE_CXX_FLAGS=-std=c++11 -frtti -fexceptions
 jvmArgs : 

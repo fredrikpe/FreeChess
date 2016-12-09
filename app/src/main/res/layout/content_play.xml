@@ -23,15 +23,45 @@
         android:id="@+id/linearLayout">
 
         <Button
-            android:text="Button"
+            android:text="New Game"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/button4" />
+            android:id="@+id/newGameButton" />
 
-        <Button
-            android:text="Button"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/button5" />
+            android:layout_height="match_parent"
+            android:id="@+id/promotionLayout">
+
+            <Button
+                android:text="Knight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/knightButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Bishop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bishopButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Tower"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/towerButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Queen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/queenButton"
+                android:layout_weight="1" />
+        </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

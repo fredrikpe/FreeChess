@@ -1,21 +1,30 @@
 package fred.freechess;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.widget.LinearLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+        import android.graphics.Canvas;
+        import android.graphics.Color;
+        import android.os.Bundle;
+        import android.provider.Settings;
+        import android.widget.Button;
+        import android.widget.LinearLayout;
+        import android.support.design.widget.FloatingActionButton;
+        import android.support.design.widget.Snackbar;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.view.View;
+        import android.view.Menu;
+        import android.view.MenuItem;
 
 public class Play extends AppCompatActivity {
 
     ChessSurface chessSurface;
     LinearLayout linearLayout;
+    LinearLayout promotionLayout;
+
+    Button knightButton;
+    Button bishopButton;
+    Button towerButton;
+    Button queenButton;
+    Button newGameButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,23 +33,81 @@ public class Play extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
+        setupButtonListeners();
 
         linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        promotionLayout = (LinearLayout) findViewById(R.id.promotionLayout);
+        promotionLayout.setVisibility(View.INVISIBLE);
+        promotionLayout.setEnabled(false);
 
         chessSurface = new ChessSurface(this);
         chessSurface.setBackgroundColor(Color.BLACK);
         chessSurface.getHolder().setFixedSize(0, 850);
         linearLayout.addView(chessSurface, 0);
 
+    }
+
+    void promotionChooser() {
+        chessSurface.setEnabled(false);
+        promotionLayout.setVisibility(View.VISIBLE);
+        promotionLayout.setEnabled(true);
+    }
+
+    void pawnPromotionFinished(PieceType type) {
+        chessSurface.chessBoard.promotionPawn.type = type;
+        chessSurface.chessBoard.promotionPawn = null;
+
+        chessSurface.setEnabled(true);
+        promotionLayout.setVisibility(View.INVISIBLE);
+        promotionLayout.setEnabled(false);
+    }
+
+    void setupButtonListeners() {
+        knightButton = (Button) findViewById(R.id.knightButton);
+        knightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pawnPromotionFinished(PieceType.N);
+            }
+        });
+        bishopButton = (Button) findViewById(R.id.bishopButton);
+        bishopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pawnPromotionFinished(PieceType.B);
+            }
+        });
+        towerButton = (Button) findViewById(R.id.towerButton);
+        towerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pawnPromotionFinished(PieceType.T);
+            }
+        });
+        queenButton = (Button) findViewById(R.id.queenButton);
+        queenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pawnPromotionFinished(PieceType.Q);
+            }
+        });
+        newGameButton = (Button) findViewById(R.id.newGameButton);
+        newGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newGame();
+            }
+        });
+    }
+
+    void newGame() {
+        System.out.println("New game clicked");
+
+        chessSurface = new ChessSurface(this);
+        chessSurface.setBackgroundColor(Color.BLACK);
+        chessSurface.getHolder().setFixedSize(0, 850);
+        linearLayout.removeViewAt(0);
+        linearLayout.addView(chessSurface, 0);
     }
 
     @Override

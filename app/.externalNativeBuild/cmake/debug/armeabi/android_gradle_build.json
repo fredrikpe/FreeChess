@@ -1,9 +1,9 @@
 
 {
-	"buildFiles" : [ "/home/fred/dev/FreeChess/app/CMakeLists.txt" ],
+	"buildFiles" : [ "/home/fredrik/dev/FreeChess/app/CMakeLists.txt" ],
 	"cleanCommands" : 
 	[
-		"/home/fred/Android/Sdk/cmake/3.6.3155560/bin/cmake --build /home/fred/dev/FreeChess/app/.externalNativeBuild/cmake/debug/armeabi --target clean"
+		"/home/fredrik/Android/Sdk/cmake/3.6.3155560/bin/cmake --build /home/fredrik/dev/FreeChess/app/.externalNativeBuild/cmake/debug/armeabi --target clean"
 	],
 	"cppFileExtensions" : [ "cpp" ],
 	"libraries" : 
@@ -12,27 +12,27 @@
 		{
 			"abi" : "armeabi",
 			"artifactName" : "native-lib",
-			"buildCommand" : "/home/fred/Android/Sdk/cmake/3.6.3155560/bin/cmake --build /home/fred/dev/FreeChess/app/.externalNativeBuild/cmake/debug/armeabi --target native-lib",
+			"buildCommand" : "/home/fredrik/Android/Sdk/cmake/3.6.3155560/bin/cmake --build /home/fredrik/dev/FreeChess/app/.externalNativeBuild/cmake/debug/armeabi --target native-lib",
 			"buildType" : "debug",
 			"files" : 
 			[
 				
 				{
-					"flags" : "  -target armv5te-none-linux-androideabi -gcc-toolchain /home/fred/Android/Sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64 --sysroot=/home/fred/Android/Sdk/ndk-bundle/platforms/android-15/arch-arm  -Dnative_lib_EXPORTS -isystem /home/fred/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/fred/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi/include -isystem /home/fred/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -fno-exceptions -fno-rtti -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -fno-exceptions -fno-rtti -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info -O0 -fno-limit-debug-info  -fPIC    -c ",
-					"src" : "/home/fred/dev/FreeChess/app/src/main/cpp/native-lib.cpp",
-					"workingDirectory" : "/home/fred/dev/FreeChess/app/.externalNativeBuild/cmake/debug/armeabi"
+					"flags" : "  -target armv5te-none-linux-androideabi -gcc-toolchain /home/fredrik/Android/Sdk/ndk-bundle/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64 --sysroot=/home/fredrik/Android/Sdk/ndk-bundle/platforms/android-15/arch-arm  -Dnative_lib_EXPORTS -isystem /home/fredrik/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include -isystem /home/fredrik/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi/include -isystem /home/fredrik/Android/Sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/backward  -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -fno-exceptions -fno-rtti -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -march=armv5te -mtune=xscale -msoft-float -fno-integrated-as -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -fno-exceptions -fno-rtti -std=c++11 -frtti -fexceptions -O0 -fno-limit-debug-info -O0 -fno-limit-debug-info  -fPIC    -c ",
+					"src" : "/home/fredrik/dev/FreeChess/app/src/main/cpp/native-lib.cpp",
+					"workingDirectory" : "/home/fredrik/dev/FreeChess/app/.externalNativeBuild/cmake/debug/armeabi"
 				}
 			],
-			"output" : "/home/fred/dev/FreeChess/app/build/intermediates/cmake/debug/obj/armeabi/libnative-lib.so",
-			"toolchain" : "1646130470174457840"
+			"output" : "/home/fredrik/dev/FreeChess/app/build/intermediates/cmake/debug/obj/armeabi/libnative-lib.so",
+			"toolchain" : "1405889729629167638"
 		}
 	},
 	"toolchains" : 
 	{
-		"1646130470174457840" : 
+		"1405889729629167638" : 
 		{
-			"cCompilerExecutable" : "/home/fred/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
-			"cppCompilerExecutable" : "/home/fred/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+			"cCompilerExecutable" : "/home/fredrik/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/home/fredrik/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
 		}
 	}
 }

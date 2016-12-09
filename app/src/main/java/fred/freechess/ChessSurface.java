@@ -33,7 +33,7 @@ public class ChessSurface extends SurfaceView {
 
     public ChessSurface(Context context) {
         super(context);
-        chessBoard = new ChessBoard();
+        chessBoard = new ChessBoard(this);
     }
 
     @Override
@@ -54,6 +54,9 @@ public class ChessSurface extends SurfaceView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!this.isEnabled()) {
+            return true;
+        }
         float touched_x = event.getX();
         float touched_y = event.getY();
 
@@ -90,10 +93,19 @@ public class ChessSurface extends SurfaceView {
     private void drawPossibleMoves(ChessBoard.Piece piece) {
         possibleMoves = chessBoard.possibleMoves(piece);
         canvasPaint.setColor(Color.BLUE);
+        canvasPaint.setStyle(Paint.Style.STROKE);
+        canvasPaint.setStrokeWidth(6);
+        outerLoop:
         for (ChessBoard.Square square : possibleMoves) {
             int x = square.file * squareWidth;
             int y = square.rank * squareHeight;
-            drawCanvas.drawRect(x, y, x + squareWidth, y + squareHeight, canvasPaint);
+            for (ChessBoard.Piece p : chessBoard.pieces) {
+                if (p.square.file == square.file && p.square.rank == square.rank) {
+                    drawCanvas.drawRect(x, y, x + squareWidth, y + squareHeight, canvasPaint);
+                    continue outerLoop;
+                }
+            }
+            drawCanvas.drawCircle(x + squareWidth/2, y + squareHeight/2, 10, canvasPaint);
         }
     }
 
