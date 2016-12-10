@@ -1,11 +1,13 @@
 package fred.freechess;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
@@ -79,7 +81,7 @@ public class ChessSurface extends SurfaceView {
 
             if (!movedPiece) {
                 ChessBoard.Piece piece = chessBoard.getPiece(file, rank);
-                if (piece != null) {
+                if (piece != null && piece.color == chessBoard.colorToMove) {
                     possibleMoves.clear();
                     chessBoard.selectedPiece = piece;
                     drawPossibleMoves(piece);
@@ -110,15 +112,25 @@ public class ChessSurface extends SurfaceView {
     }
 
     private void drawPieces(Canvas canvas) {
-        paint.setTextSize(65);
+        paint.setTextSize(120);
+        paint.setColor(Color.BLACK);
         for (ChessBoard.Piece piece : this.chessBoard.pieces) {
-            int x = piece.square.file * squareWidth + squareWidth / 3;
-            int y = piece.square.rank * squareHeight + 2 * squareHeight / 3;
-            if (piece.color == PieceColor.BLACK)
-                paint.setColor(Color.BLACK);
-            else
-                paint.setColor(Color.GREEN);
-            canvas.drawText(piece.type.toString(), x, y, paint);
+            int x = piece.square.file * squareWidth;
+            int y = piece.square.rank * squareHeight;
+
+            if (piece.color == PieceColor.BLACK && ((Play) getContext()).preferences.getBoolean("flip_black", true)) {
+                x += squareWidth * 7/8;
+                y += squareHeight / 10;
+
+                canvas.save();
+                canvas.rotate(-180, x, y);
+                canvas.drawText(piece.type.toString(piece.color), x, y, paint);
+                canvas.restore();
+            } else {
+                x += squareWidth /6;
+                y += squareHeight * 0.95;
+                canvas.drawText(piece.type.toString(piece.color), x, y, paint);
+            }
         }
     }
 
@@ -130,10 +142,10 @@ public class ChessSurface extends SurfaceView {
         for (int i=0; i<8; i++) {
             for (int j=0; j<8; j++) {
                 if ((i + j & 1) != 0) {
-                    paint.setColor(Color.GRAY);
+                    paint.setColor(Color.parseColor("#7fa87f")); //rgb(85,107,47)); //rgb(107, 142, 35));
 
                 } else {
-                    paint.setColor(Color.WHITE);
+                    paint.setColor(Color.rgb(255,240,245));
                 }
                 int left = i * squareWidth;
                 int top = j * squareHeight;

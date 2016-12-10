@@ -1,14 +1,8 @@
 package fred.freechess;
 
 
-import android.content.Context;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Vector;
-
-import static fred.freechess.PieceType.B;
 
 /**
  * Created by fred on 12/9/16.
@@ -21,7 +15,9 @@ class ChessBoard {
     Vector<Piece> pieces;
     Piece selectedPiece;
     Piece promotionPawn;
-    Piece enPassant;
+    private Piece enPassant;
+
+    PieceColor colorToMove = PieceColor.WHITE;
 
     ChessBoard(ChessSurface parent) {
         this.parent = parent;
@@ -30,50 +26,68 @@ class ChessBoard {
             pieces.add(new Piece(PieceColor.WHITE, new Square(i, 6), PieceType.P));
             pieces.add(new Piece(PieceColor.BLACK, new Square(i, 1), PieceType.P));
         }
-        pieces.add(new Piece(PieceColor.WHITE, new Square(0, 7), PieceType.T));
+        pieces.add(new Piece(PieceColor.WHITE, new Square(0, 7), PieceType.R));
         pieces.add(new Piece(PieceColor.WHITE, new Square(1, 7), PieceType.N));
         pieces.add(new Piece(PieceColor.WHITE, new Square(2, 7), PieceType.B));
         pieces.add(new Piece(PieceColor.WHITE, new Square(3, 7), PieceType.Q));
         pieces.add(new Piece(PieceColor.WHITE, new Square(4, 7), PieceType.K));
         pieces.add(new Piece(PieceColor.WHITE, new Square(5, 7), PieceType.B));
         pieces.add(new Piece(PieceColor.WHITE, new Square(6, 7), PieceType.N));
-        pieces.add(new Piece(PieceColor.WHITE, new Square(7, 7), PieceType.T));
+        pieces.add(new Piece(PieceColor.WHITE, new Square(7, 7), PieceType.R));
 
-        pieces.add(new Piece(PieceColor.BLACK, new Square(0, 0), PieceType.T));
+        pieces.add(new Piece(PieceColor.BLACK, new Square(0, 0), PieceType.R));
         pieces.add(new Piece(PieceColor.BLACK, new Square(1, 0), PieceType.N));
         pieces.add(new Piece(PieceColor.BLACK, new Square(2, 0), PieceType.B));
         pieces.add(new Piece(PieceColor.BLACK, new Square(3, 0), PieceType.Q));
         pieces.add(new Piece(PieceColor.BLACK, new Square(4, 0), PieceType.K));
         pieces.add(new Piece(PieceColor.BLACK, new Square(5, 0), PieceType.B));
         pieces.add(new Piece(PieceColor.BLACK, new Square(6, 0), PieceType.N));
-        pieces.add(new Piece(PieceColor.BLACK, new Square(7, 0), PieceType.T));
+        pieces.add(new Piece(PieceColor.BLACK, new Square(7, 0), PieceType.R));
 
     }
 
     void move(int file, int rank) {
+        if (selectedPiece.color != colorToMove)
+            return;
+
+        boolean removed_piece = false;
         for (Piece piece : pieces) {
             if (piece.square.file == file && piece.square.rank == rank) {
                 pieces.remove(piece);
+                removed_piece = true;
                 break;
             }
         }
-        if (enPassant != null && file == enPassant.square.file
-            && selectedPiece.type == PieceType.P && selectedPiece != enPassant) {
-            pieces.remove(enPassant);
-        }
         int oldRank = selectedPiece.square.rank;
+        int oldFile = selectedPiece.square.file;
 
         selectedPiece.square.file = file;
         selectedPiece.square.rank = rank;
-        if (selectedPiece.type == PieceType.P && (rank == 0 || rank == 7)) {
-            // Pawn promotion
-            promotionPawn = selectedPiece;
-            ((Play) parent.getContext()).promotionChooser();
+        // En passant rules
+        if (enPassant != null && !removed_piece && selectedPiece.type == PieceType.P
+                && oldFile != file) {
+            pieces.remove(enPassant);
         }
         if (selectedPiece.type == PieceType.P && Math.abs(oldRank - rank) == 2)
             enPassant = selectedPiece;
         else
             enPassant = null;
+
+        if (selectedPiece.type == PieceType.P && (rank == 0 || rank == 7)) {
+            // Pawn promotion
+            promotionPawn = selectedPiece;
+            ((Play) parent.getContext()).promotionChooser();
+        } else {
+            colorToMove = selectedPiece.color == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
+            ((Play) parent.getContext()).switchClocks(selectedPiece.color);
+        }
+    }
+
+    void pawnPromotionFinished(PieceType type) {
+        promotionPawn.type = type;
+        colorToMove = promotionPawn.color == PieceColor.BLACK ? PieceColor.WHITE : PieceColor.BLACK;
+        ((Play) parent.getContext()).switchClocks(promotionPawn.color);
+        promotionPawn = null;
     }
 
     ArrayList<Square> possibleMoves(Piece piece) {
@@ -108,7 +122,7 @@ class ChessBoard {
                     }
                 }
                 break;
-            case T:
+            case R:
                 addHorVerMoves(piece, moves);
                 break;
             case P:

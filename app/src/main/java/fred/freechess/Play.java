@@ -1,13 +1,13 @@
 package fred.freechess;
 
-        import android.graphics.Canvas;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
         import android.graphics.Color;
         import android.os.Bundle;
-        import android.provider.Settings;
+        import android.os.SystemClock;
+        import android.preference.PreferenceManager;
         import android.widget.Button;
         import android.widget.LinearLayout;
-        import android.support.design.widget.FloatingActionButton;
-        import android.support.design.widget.Snackbar;
         import android.support.v7.app.AppCompatActivity;
         import android.support.v7.widget.Toolbar;
         import android.view.View;
@@ -15,6 +15,8 @@ package fred.freechess;
         import android.view.MenuItem;
 
 public class Play extends AppCompatActivity {
+
+    SharedPreferences preferences;
 
     ChessSurface chessSurface;
     LinearLayout linearLayout;
@@ -26,12 +28,19 @@ public class Play extends AppCompatActivity {
     Button queenButton;
     Button newGameButton;
 
+    ChessClock blackTime;
+    ChessClock whiteTime;
+    ChessClock dummy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         setupButtonListeners();
 
@@ -40,11 +49,15 @@ public class Play extends AppCompatActivity {
         promotionLayout.setVisibility(View.INVISIBLE);
         promotionLayout.setEnabled(false);
 
-        chessSurface = new ChessSurface(this);
-        chessSurface.setBackgroundColor(Color.BLACK);
-        chessSurface.getHolder().setFixedSize(0, 850);
-        linearLayout.addView(chessSurface, 0);
+        blackTime = new ChessClock(this, PieceColor.BLACK);
+        whiteTime = new ChessClock(this, PieceColor.WHITE);
+        dummy = new ChessClock(this, PieceColor.WHITE);
 
+        linearLayout.addView(whiteTime, 0);
+        linearLayout.addView(dummy, 0);  // Dummy view gets removed first new game call
+        linearLayout.addView(blackTime, 0);
+
+        newGame();
     }
 
     void promotionChooser() {
@@ -54,8 +67,7 @@ public class Play extends AppCompatActivity {
     }
 
     void pawnPromotionFinished(PieceType type) {
-        chessSurface.chessBoard.promotionPawn.type = type;
-        chessSurface.chessBoard.promotionPawn = null;
+        chessSurface.chessBoard.pawnPromotionFinished(type);
 
         chessSurface.setEnabled(true);
         promotionLayout.setVisibility(View.INVISIBLE);
@@ -81,7 +93,7 @@ public class Play extends AppCompatActivity {
         towerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pawnPromotionFinished(PieceType.T);
+                pawnPromotionFinished(PieceType.R);
             }
         });
         queenButton = (Button) findViewById(R.id.queenButton);
@@ -103,11 +115,26 @@ public class Play extends AppCompatActivity {
     void newGame() {
         System.out.println("New game clicked");
 
+        blackTime.reset(60 * Integer.parseInt(preferences.getString("time_limit", "3")));
+        whiteTime.reset(60 * Integer.parseInt(preferences.getString("time_limit", "3")));
+
         chessSurface = new ChessSurface(this);
         chessSurface.setBackgroundColor(Color.BLACK);
         chessSurface.getHolder().setFixedSize(0, 850);
-        linearLayout.removeViewAt(0);
-        linearLayout.addView(chessSurface, 0);
+        linearLayout.removeViewAt(1);
+        linearLayout.addView(chessSurface, 1);
+
+        whiteTime.start();
+    }
+
+    void switchClocks(PieceColor color) {
+        if (color == PieceColor.WHITE) {
+            whiteTime.pause();
+            blackTime.unPause();
+        } else {
+            whiteTime.unPause();
+            blackTime.pause();
+        }
     }
 
     @Override
@@ -126,6 +153,9 @@ public class Play extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent();
+            intent.setClassName(this, "fred.freechess.SettingsActivity");
+            startActivity(intent);
             return true;
         }
 
